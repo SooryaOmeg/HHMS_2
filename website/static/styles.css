@@ -1,0 +1,98 @@
+#logo{
+    margin-right: 10px;
+}
+
+#title{
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: bolder;
+    font-size: 50px;
+    font-style: normal;
+    color: blueviolet;
+}
+
+.name-det{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px 10px 20px;
+}
+
+.rating{
+    display: flex;
+    gap: 10px;
+}
+
+.c1{
+    display: flex;
+    padding: 50px;
+    flex-wrap: wrap;
+    justify-content:space-evenly ;
+}
+
+.card1{
+    border: 1px solid lightgray;
+    width: 300px;
+    height: 380px;
+    border-radius: 30px;
+    margin-bottom: 40px;
+    padding: 0px;
+}
+
+.card1:hover{
+    box-shadow: 20px 10px 30px rgba(68, 123, 255, 0.97);
+    transition-duration: 0.3s;
+}
+
+.card1 > .d{
+    width: 298px;
+    height: 200px;
+    border-radius: 30px;
+}
+
+.name{
+    font-weight: bolder;
+}
+
+.rating{
+    font-weight: bolder;
+}
+
+.card1 > button {
+    margin-left: 10px;
+}
+
+.main-body{
+    display: flex;
+    /* border: 1px solid black; */
+    padding-left: 100px;
+    justify-content: space-evenly;
+}
+
+.main-body img{
+    width: 400px;
+    height: 500px;
+    border: 3px solid green;
+    border-radius: 20px;
+    margin-right: 20px;
+}
+
+.pro-tex{
+    /* border: 1px solid  blue; */
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 800px;
+}
+
+.app{
+    /* border: 2px solid red; */
+    margin-top: 20px;
+    /* display: flex;
+    justify-content: space-between; */
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.app button{
+    margin-left: 150px;
+}
