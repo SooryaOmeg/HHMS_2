@@ -1,15 +1,15 @@
-name: Deploy to Hugging Face (Develop)
+name: Deploy to Hugging Face
 
 on:
   push:
     branches:
-      - develop
+      - main
   pull_request:
     branches:
-      - develop
+      - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,25 +33,47 @@ jobs:
         run: |
           pytest
 
-      - name: Authenticate with Hugging Face
-        env:
-          HF_TOKEN: ${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}
-        run: |
-          mkdir -p ~/.huggingface
-          echo "${HF_TOKEN}" > ~/.huggingface/token
-          chmod 600 ~/.huggingface/token
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
 
-      - name: Configure Git
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Hugging Face Hub
+        run: pip install huggingface-hub
+
+      - name: Log in to Hugging Face Docker registry
+        env:
+          HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
+        run: |
+          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin https://ghcr.io
+
+      - name: Configure Git and Token
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           
-      - name: Set Hugging Face Remote with Token
-        env:
-          HF_PERSONAL_ACCESS_TOKEN: ${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}
+          # Set up token for git authentication
+          git config --global credential.helper store
+          echo "https://USER:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          chmod 600 ~/.git-credentials
+          
+          # Also set up huggingface token
+          mkdir -p ~/.huggingface
+          echo "${HF_TOKEN}" > ~/.huggingface/token
+          chmod 600 ~/.huggingface/token
+      
+          
+      - name: Install Hugging Face CLI
         run: |
-          git remote set-url origin https://${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}@huggingface.co/spaces/SooryaOmeg/HHMS
-
-      - name: Push to Hugging Face Space
+          python -m pip install --upgrade pip
+          pip install huggingface_hub
+        
+      - name: Push Docker image to Hugging Face
         run: |
-          git push origin develop
+          git remote set-url origin https://$HF_API_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS
+          git push origin main
