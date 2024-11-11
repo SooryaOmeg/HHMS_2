@@ -2,6 +2,7 @@ from flask import render_template
 from .models import Appointment
 import os
 import requests
+from dotenv import load_dotenv
 from flask import Blueprint, redirect, url_for, session, request
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
@@ -10,6 +11,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 import google.auth.transport.requests
 
+load_dotenv()
 
 auth = Blueprint('auth', __name__)
 
@@ -67,7 +69,7 @@ def callback():
         'refresh_token': credentials.refresh_token,
         'token_uri': credentials.token_uri,
         'client_id': credentials.client_id,
-        'client_secret': credentials.client_secret,
+        'client_secret': os.getenv('CLIENT_SECRET'),
         'scopes': credentials.scopes
     }
     print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
