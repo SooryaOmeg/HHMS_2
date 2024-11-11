@@ -53,28 +53,28 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-      
-      - name: Add Hugging Face Remote and Push
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          
+      - name: Install Hugging Face CLI
         run: |
-          # Remove huggingface remote if it exists
-          git remote remove huggingface || true
+          python -m pip install --upgrade pip
+          pip install huggingface_hub
+        
+      - name: Push to Hugging Face
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           
-          # Add new huggingface remote with token
-          git remote add huggingface "https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS"
+          echo "Ensuring target directory exists..."
+          mkdir -p /tmp/hf_repo
           
-          # Verify remotes
-          echo "Git remotes:"
-          git remote -v
+          echo "Cloning Hugging Face repository..."
+          git clone https://huggingface.co/spaces/SooryaOmeg/HHMS /tmp/hf_repo
           
-          # Force push to Hugging Face
+          echo "Copying files..."
+          cp -r ./* /tmp/hf_repo/
+          
           echo "Pushing to Hugging Face..."
-          git push huggingface main:main --force
-          
-          # Print status
-          if [ $? -eq 0 ]; then
-            echo "Successfully pushed to Hugging Face"
-          else
-            echo "Failed to push to Hugging Face"
-            exit 1
+          cd /tmp/hf_repo
+          git add .
+          git commit -m "Update from GitHub Actions"
+          git push
