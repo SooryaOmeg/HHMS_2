@@ -60,13 +60,19 @@ jobs:
           
           # Add new origin with token in the URL
           git remote add origin "https://SooryaOmeg:${HF_TOKEN}@huggingface.co/spaces/SooryaOmeg/HHMS"
-          git config pull.rebase false
-          git pull origin main
+          # git config pull.rebase false
+          # git pull origin main
           
-          # Set up huggingface token for API access
-          mkdir -p ~/.huggingface
-          echo "${HF_TOKEN}" > ~/.huggingface/token
-          chmod 600 ~/.huggingface/token
+          # # Set up huggingface token for API access
+          # mkdir -p ~/.huggingface
+          # echo "${HF_TOKEN}" > ~/.huggingface/token
+          # chmod 600 ~/.huggingface/token
           
-          # Push to Hugging Face
-          git push origin main || git push --force origin main
+          # # Push to Hugging Face
+          # git push origin main || git push --force origin main
+          git checkout -b temp-deploy
+           git add .
+          git commit -m "Update from GitHub Actions" || true
+          
+          # Force push to Hugging Face
+          git push --force origin temp-deploy:main
