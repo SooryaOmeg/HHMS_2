@@ -70,5 +70,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          git remote set-url origin https://$HF_API_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS
+          git remote set-url origin https://SooryaOmeg:$HF_API_TOKEN@huggingface.co/space/SooryaOmeg/HHMS
           git push origin main
