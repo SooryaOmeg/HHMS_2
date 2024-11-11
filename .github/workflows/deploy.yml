@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt huggingface-hub
 
       - name: Run Tests
         env:
@@ -32,9 +32,6 @@ jobs:
           SQL_URI: ${{ secrets.SQL_URI }}
         run: |
           pytest
-
-      - name: Build Docker image
-        run: docker build -t my-flask-app .
 
   deploy:
     runs-on: ubuntu-latest
@@ -44,13 +41,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Log in to Hugging Face Docker registry
+      - name: Install Hugging Face Hub
+        run: pip install huggingface-hub
+
+      - name: Log in to Hugging Face
+        env:
+          HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
+        run: huggingface-cli login --token $HF_API_TOKEN
+
+      - name: Upload Code or Model to Hugging Face
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin huggingface.com
-
-      - name: Push Docker image to Hugging Face
-        run: |
-          docker tag my-flask-app huggingface.co/<your-huggingface-username>/<repo-name>:latest
-          docker push huggingface.co/<your-huggingface-username>/<repo-name>:latest
+          python -c "
+            from huggingface_hub import HfApi, Repository
+            api = HfApi()
+            api.create_repo(name='HHMS', private=False, token='$HF_API_TOKEN')
+            repo = Repository(local_dir='./', clone_from='huggingface.co/spaces/SooryaOmeg/HHMS', use_auth_token=True)
+            repo.push_to_hub()
+          "
