@@ -62,7 +62,7 @@ jobs:
           git remote remove huggingface || true
           
           # Add new huggingface remote with token
-          git remote add huggingface https://huggingface.co/spaces/SooryaOmeg/HHMS
+          git remote add huggingface "https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS"
           
           # Verify remotes
           echo "Git remotes:"
@@ -70,4 +70,11 @@ jobs:
           
           # Force push to Hugging Face
           echo "Pushing to Hugging Face..."
-          git push huggingface main --force
+          git push huggingface main:main --force
+          
+          # Print status
+          if [ $? -eq 0 ]; then
+            echo "Successfully pushed to Hugging Face"
+          else
+            echo "Failed to push to Hugging Face"
+            exit 1
