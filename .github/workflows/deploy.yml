@@ -55,7 +55,7 @@ jobs:
         run: |
           python -c "
           from huggingface_hub import HfApi, Repository
-          repo_id = 'YourUsername/my-flask-app'  # Replace with your actual repo ID
+          repo_id = 'SooryaOmeg/HHMS'  # Replace with your actual repo ID
           # Clone the existing repository from Hugging Face
           repo = Repository(local_dir='./', clone_from=repo_id, use_auth_token='$HF_API_TOKEN')
           # Push the changes to the Hugging Face repository
