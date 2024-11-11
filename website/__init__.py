@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 db = SQLAlchemy()
 
+load_dotenv()
 
 def create_app():
     logging.basicConfig(level=logging.DEBUG)
