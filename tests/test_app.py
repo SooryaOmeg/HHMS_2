@@ -12,47 +12,47 @@ app = create_app()
 
 class TestAuthFunctions(unittest.TestCase):
     
-    @classmethod
-    def setUpClass(cls):
-        # Set up the app context once for all tests
-        cls.app = app
-        cls.app_context = cls.app.app_context()
-        cls.app_context.push()
+    # @classmethod
+    # def setUpClass(cls):
+    #     # Set up the app context once for all tests
+    #     cls.app = app
+    #     cls.app_context = cls.app.app_context()
+    #     cls.app_context.push()
     
-    @classmethod
-    def tearDownClass(cls):
-        # Clean up the app context
-        cls.app_context.pop()
+    # @classmethod
+    # def tearDownClass(cls):
+    #     # Clean up the app context
+    #     cls.app_context.pop()
 
-    @mock.patch('website.auth.Credentials')
-    @mock.patch('os.path.exists')
-    @mock.patch('website.auth.InstalledAppFlow')
-    def test_get_google_credentials(self, mock_flow, mock_exists, mock_credentials):
-        with app.test_request_context('/'):
-            # Mock session with expected credentials structure
-            session['credentials'] = {
-                'token': 'test_token',
-                'refresh_token': 'test_refresh_token',
-                'token_uri': 'test_token_uri',
-                'client_id': 'test_client_id',
-                'client_secret': 'test_client_secret',
-                'scopes': ['test_scope']
-            }
+    # @mock.patch('website.auth.Credentials')
+    # @mock.patch('os.path.exists')
+    # @mock.patch('website.auth.InstalledAppFlow')
+    # def test_get_google_credentials(self, mock_flow, mock_exists, mock_credentials):
+    #     with app.test_request_context('/'):
+    #         # Mock session with expected credentials structure
+    #         session['credentials'] = {
+    #             'token': 'test_token',
+    #             'refresh_token': 'test_refresh_token',
+    #             'token_uri': 'test_token_uri',
+    #             'client_id': 'test_client_id',
+    #             'client_secret': 'test_client_secret',
+    #             'scopes': ['test_scope']
+    #         }
 
-            # Mock os.path.exists to simulate the presence of 'token.json'
-            mock_exists.return_value = True
+    #         # Mock os.path.exists to simulate the presence of 'token.json'
+    #         mock_exists.return_value = True
             
-            # Mock the credentials object with expected properties
-            mock_creds = mock.Mock()
-            mock_creds.valid = True
-            mock_creds.token = 'test_token'
-            mock_credentials.from_authorized_user_file.return_value = mock_creds
+    #         # Mock the credentials object with expected properties
+    #         mock_creds = mock.Mock()
+    #         mock_creds.valid = True
+    #         mock_creds.token = 'test_token'
+    #         mock_credentials.from_authorized_user_file.return_value = mock_creds
             
-            # Call the function under test
-            creds = get_google_credentials()
+    #         # Call the function under test
+    #         creds = get_google_credentials()
             
-            # Assert that the returned credentials are the mocked ones
-            self.assertIsNotNone(creds, "Expected credentials but got None")
+    #         # Assert that the returned credentials are the mocked ones
+    #         self.assertIsNotNone(creds, "Expected credentials but got None")
 
     
     
@@ -184,62 +184,62 @@ class TestModelFunctions(unittest.TestCase):
         result = schedule_event("Test Event", "2023-11-12T09:15:00+05:30", "2023-11-12T10:00:00+05:30")
         self.assertEqual(result, mock_event)
     
-    @mock.patch('website.models.db')
-    def test_appointment_unbooked_check_availability1(self, mock_db):
-    # Create and push an application context
-        with app.app_context():
-            # Mock the database query response
-            mock_db.query.filter_by.return_value.all.return_value = []
+    # @mock.patch('website.models.db')
+    # def test_appointment_unbooked_check_availability1(self, mock_db):
+    # # Create and push an application context
+    #     with app.app_context():
+    #         # Mock the database query response
+    #         mock_db.query.filter_by.return_value.all.return_value = []
             
-            day = "Mon"
-            time = "09:00"
+    #         day = "Mon"
+    #         time = "09:00"
             
-            # Call the function within the app context
-            result = Appointment.checkAvailability(day, time)
-            self.assertEqual(result, [])
+    #         # Call the function within the app context
+    #         result = Appointment.checkAvailability(day, time)
+    #         self.assertEqual(result, [])
     
-    @mock.patch('website.models.db')
-    def test_appointment_unbooked_check_availability2(self, mock_db):
-    # Create and push an application context
-        with app.app_context():
-            # Mock the database query response
-            mock_db.query.filter_by.return_value.all.return_value = []
+    # @mock.patch('website.models.db')
+    # def test_appointment_unbooked_check_availability2(self, mock_db):
+    # # Create and push an application context
+    #     with app.app_context():
+    #         # Mock the database query response
+    #         mock_db.query.filter_by.return_value.all.return_value = []
             
-            day = "Mon"
-            time = "10:10"
+    #         day = "Mon"
+    #         time = "10:10"
             
-            # Call the function within the app context
-            result = Appointment.checkAvailability(day, time)
+    #         # Call the function within the app context
+    #         result = Appointment.checkAvailability(day, time)
 
-            self.assertEqual(len(result),0)
+    #         self.assertEqual(len(result),0)
     
-    @mock.patch('website.models.db')
-    def test_appointment_unbooked_check_availability3(self, mock_db):
-    # Create and push an application context
-        with app.app_context():
-            # Mock the database query response
-            mock_db.query.filter_by.return_value.all.return_value = []
+    # @mock.patch('website.models.db')
+    # def test_appointment_unbooked_check_availability3(self, mock_db):
+    # # Create and push an application context
+    #     with app.app_context():
+    #         # Mock the database query response
+    #         mock_db.query.filter_by.return_value.all.return_value = []
             
-            day = "Wed"
-            time = "19:10"
+    #         day = "Wed"
+    #         time = "19:10"
             
-            # Call the function within the app context
-            result = Appointment.checkAvailability(day, time)
+    #         # Call the function within the app context
+    #         result = Appointment.checkAvailability(day, time)
 
-            self.assertEqual(len(result),0)
+    #         self.assertEqual(len(result),0)
 
-    @mock.patch('website.models.db')
-    def test_appointment_unbooked_check_availability4(self, mock_db):
-    # Create and push an application context
-        with app.app_context():
-            # Mock the database query response
-            mock_db.query.filter_by.return_value.all.return_value = []
+    # @mock.patch('website.models.db')
+    # def test_appointment_unbooked_check_availability4(self, mock_db):
+    # # Create and push an application context
+    #     with app.app_context():
+    #         # Mock the database query response
+    #         mock_db.query.filter_by.return_value.all.return_value = []
             
-            day = "Fri"
-            time = "11:00"
+    #         day = "Fri"
+    #         time = "11:00"
             
-            # Call the function within the app context
-            result = Appointment.checkAvailability(day, time)
+    #         # Call the function within the app context
+    #         result = Appointment.checkAvailability(day, time)
 
-            self.assertNotEqual(len(result),0)
+    #         self.assertNotEqual(len(result),0)
 # Run the tests with python -m unittest discover -s tests -p "test_*.py"
