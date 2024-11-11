@@ -48,7 +48,7 @@ jobs:
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin huggingface.co
+          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin https://ghcr.io
 
       - name: Configure Git and Token
         env:
