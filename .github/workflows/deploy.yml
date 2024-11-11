@@ -3,14 +3,14 @@ name: Deploy to Hugging Face
 on:
   push:
     branches:
-      - main  # Triggers the workflow on every push to the main branch
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Specifies the type of virtual machine to use
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -28,7 +28,8 @@ jobs:
 
       - name: Run Tests
         env:
-          PYTHONPATH: ${{ github.workspace }} 
+          PYTHONPATH: ${{ github.workspace }}
+          SQL_URI: ${{ secrets.SQL_URI }}
         run: |
           pytest
 
