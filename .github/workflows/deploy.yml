@@ -53,7 +53,7 @@ jobs:
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          git remote add hf https://huggingface.co/spaces/SooryaOmeg/HHMS
+          git remote add hf https://$HF_API_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS
           git push hf main
           # python -c "from huggingface_hub import HfApi, Repository
           # repo_id = 'spaces/SooryaOmeg/HHMS'
