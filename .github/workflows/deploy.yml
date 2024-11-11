@@ -44,11 +44,10 @@ jobs:
       - name: Install Hugging Face Hub
         run: pip install huggingface-hub
 
-      - name: Log in to Hugging Face Docker registry
+      - name: Log in to Hugging Face
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
-        run: |
-          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin https://ghcr.io
+        run: huggingface-cli login --token $HF_API_TOKEN
 
       - name: Configure Git and Token
         env:
