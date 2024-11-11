@@ -9,7 +9,7 @@ on:
       - develop
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,47 +33,25 @@ jobs:
         run: |
           pytest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-
-      - name: Install Hugging Face CLI and dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install huggingface_hub
-
       - name: Authenticate with Hugging Face
         env:
-          HF_TOKEN: ${{ secrets.HF_API_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}
         run: |
           mkdir -p ~/.huggingface
           echo "${HF_TOKEN}" > ~/.huggingface/token
           chmod 600 ~/.huggingface/token
 
-      - name: Configure Git for Hugging Face
-        env:
-          HF_PERSONAL_ACCESS_TOKEN: ${{ secrets.HF_API_TOKEN }}
+      - name: Configure Git
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           
-          # Set up credentials for Hugging Face repository with personal access token
-          git config --global credential.helper store
-          echo "https://${HF_PERSONAL_ACCESS_TOKEN}@huggingface.co" > ~/.git-credentials
-          chmod 600 ~/.git-credentials
+      - name: Set Hugging Face Remote with Token
+        env:
+          HF_PERSONAL_ACCESS_TOKEN: ${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}
+        run: |
+          git remote set-url origin https://${{ secrets.HF_PERSONAL_ACCESS_TOKEN }}@huggingface.co/spaces/SooryaOmeg/HHMS
 
       - name: Push to Hugging Face Space
-        env:
-          HF_PERSONAL_ACCESS_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          git remote set-url origin https://${{ secrets.HF_API_TOKEN }}@huggingface.co/spaces/SooryaOmeg/HHMS
           git push origin develop
