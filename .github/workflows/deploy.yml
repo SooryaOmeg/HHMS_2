@@ -56,7 +56,7 @@ jobs:
           python -c "
           from huggingface_hub import HfApi, Repository
           api = HfApi()
-          api.create_repo(name='HHMS', private=False, token='$HF_API_TOKEN')
+          api.create_repo(repo_id='SooryaOmeg/HHMS', private=False, token='$HF_API_TOKEN')
           repo = Repository(local_dir='./', clone_from='huggingface.co/spaces/SooryaOmeg/HHMS', use_auth_token=True)
           repo.push_to_hub()
           "
