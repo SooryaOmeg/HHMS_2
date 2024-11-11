@@ -44,10 +44,11 @@ jobs:
       - name: Install Hugging Face Hub
         run: pip install huggingface-hub
 
-      - name: Log in to Hugging Face
+      - name: Log in to Hugging Face Docker registry
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
-        run: huggingface-cli login --token $HF_API_TOKEN
+        run: |
+          echo $HF_API_TOKEN | docker login -u SooryaOmeg --password-stdin huggingface.co
 
       - name: Configure Git and Token
         env:
@@ -72,21 +73,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install huggingface_hub
         
-      - name: Push to Hugging Face
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      - name: Push Docker image to Hugging Face
         run: |
-          echo "Ensuring target directory exists..."
-          mkdir -p /tmp/hf_repo
-          
-          echo "Cloning Hugging Face repository..."
-          git clone https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS /tmp/hf_repo
-          
-          echo "Copying files..."
-          cp -r ./* /tmp/hf_repo/ || true
-          
-          echo "Pushing to Hugging Face..."
-          cd /tmp/hf_repo
-          git add .
-          git commit -m "Update from GitHub Actions" || echo "No changes to commit"
-          git push https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS HEAD:main
+          git remote set-url origin https://$HF_API_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS
+          git push origin main
