@@ -53,10 +53,11 @@ jobs:
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          git remote add hf https://$HF_API_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS
-          git push hf main
-          # python -c "from huggingface_hub import HfApi, Repository
-          # repo_id = 'spaces/SooryaOmeg/HHMS'
-          # repo = Repository(local_dir='./', clone_from=repo_id, use_auth_token='$HF_API_TOKEN')
-          # repo.push_to_hub()
-          # "
+          python -c "
+          from huggingface_hub import HfApi, Repository
+          repo_id = 'YourUsername/my-flask-app'  # Replace with your actual repo ID
+          # Clone the existing repository from Hugging Face
+          repo = Repository(local_dir='./', clone_from=repo_id, use_auth_token='$HF_API_TOKEN')
+          # Push the changes to the Hugging Face repository
+          repo.push_to_hub()
+          "
