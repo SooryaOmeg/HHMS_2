@@ -49,10 +49,23 @@ jobs:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: huggingface-cli login --token $HF_API_TOKEN
 
-      - name: Setup Git Config
+      - name: Configure Git and Token
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
+          
+          # Set up token for git authentication
+          git config --global credential.helper store
+          echo "https://USER:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          chmod 600 ~/.git-credentials
+          
+          # Also set up huggingface token
+          mkdir -p ~/.huggingface
+          echo "${HF_TOKEN}" > ~/.huggingface/token
+          chmod 600 ~/.huggingface/token
+      
           
       - name: Install Hugging Face CLI
         run: |
@@ -63,16 +76,17 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
+          echo "Ensuring target directory exists..."
+          mkdir -p /tmp/hf_repo
           
-          echo "Pushing directly to Hugging Face..."
+          echo "Cloning Hugging Face repository..."
+          git clone https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS /tmp/hf_repo
           
-          # Remove origin to avoid confusion
-          git remote remove origin
+          echo "Copying files..."
+          cp -r ./* /tmp/hf_repo/ || true
           
-          # Add Hugging Face as new origin with token
-          git remote add origin "https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS"
-          
-          # Force push all content
-          git push -f origin main:ma
+          echo "Pushing to Hugging Face..."
+          cd /tmp/hf_repo
+          git add .
+          git commit -m "Update from GitHub Actions" || echo "No changes to commit"
+          git push https://$HF_TOKEN@huggingface.co/spaces/SooryaOmeg/HHMS HEAD:main
