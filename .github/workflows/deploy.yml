@@ -54,15 +54,21 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python -c "
-          from huggingface_hub import HfApi
-          api = HfApi()
+          from huggingface_hub import HfApi, login
+          import os
           
           # Login using token
-          api.set_access_token('${{ secrets.HF_TOKEN }}')
+          login(token='${{ secrets.HF_TOKEN }}')
           
-          # Upload your files
+          api = HfApi()
+          
+          # Print current directory contents for debugging
+          print('Contents of current directory:')
+          print(os.listdir('.'))
+          
+          # Upload all files from the current directory
           api.upload_folder(
-              folder_path='.',
+              folder_path='.',  # Upload everything from current directory
               repo_id='SooryaOmeg/HHMS',
               repo_type='model'
           )
