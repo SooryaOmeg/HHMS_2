@@ -11,6 +11,5 @@ __pycache__/
 venv/
 
 # OS or IDE-Specific Files
-.DS_Store
 .idea/
 .vscode/
