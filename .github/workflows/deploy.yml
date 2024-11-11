@@ -49,29 +49,25 @@ jobs:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: huggingface-cli login --token $HF_API_TOKEN
 
-      - name: Upload to Hugging Face
+      - name: Setup Git Config
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+      
+      - name: Add Hugging Face Remote and Push
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python -c "
-          import os
-          from huggingface_hub import HfApi, login
+          # Remove huggingface remote if it exists
+          git remote remove huggingface || true
           
-          # Login with the full token string
-          token = os.environ['HF_TOKEN']
-          login(token=token)
+          # Add new huggingface remote with token
+          git remote add huggingface https://huggingface.co/spaces/SooryaOmeg/HHMS
           
-          api = HfApi()
+          # Verify remotes
+          echo "Git remotes:"
+          git remote -v
           
-          # Print current directory contents for debugging
-          print('Contents of current directory:')
-          print(os.listdir('.'))
-          
-          # Upload all files from the current directory
-          api.upload_folder(
-              folder_path='.',
-              repo_id='SooryaOmeg/HHMS',
-              repo_type='model',
-              token=token  # Also pass token here
-          )
-          "
+          # Force push to Hugging Face
+          echo "Pushing to Hugging Face..."
+          git push huggingface main --force
