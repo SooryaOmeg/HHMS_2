@@ -1,1 +1,16 @@
-credentials.json
+# Environment and Credential Files
+.env
+token.json
+
+# Python Compiled and Cache Files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Environment Directory
+venv/
+
+# OS or IDE-Specific Files
+.DS_Store
+.idea/
+.vscode/
