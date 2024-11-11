@@ -60,7 +60,7 @@ jobs:
           
           # Add new origin with token in the URL
           git remote add origin "https://SooryaOmeg:${HF_TOKEN}@huggingface.co/spaces/SooryaOmeg/HHMS"
-          git pull origin
+          git pull origin main
           
           # Set up huggingface token for API access
           mkdir -p ~/.huggingface
