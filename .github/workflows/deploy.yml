@@ -53,10 +53,8 @@ jobs:
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          python -c "
-          from huggingface_hub import HfApi, Repository
-          api = HfApi()
-          api.create_repo(repo_id='SooryaOmeg/HHMS', private=False, token='$HF_API_TOKEN')
-          repo = Repository(local_dir='./', clone_from='huggingface.co/spaces/SooryaOmeg/HHMS', use_auth_token=True)
-          repo.push_to_hub()
+          python -c "from huggingface_hub import HfApi, Repository
+            repo_id = 'SooryaOmeg/HHMS'
+            repo = Repository(local_dir='./', clone_from=repo_id, use_auth_token='$HF_API_TOKEN')
+            repo.push_to_hub()
           "
